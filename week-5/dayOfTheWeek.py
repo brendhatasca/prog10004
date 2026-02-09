@@ -1,7 +1,7 @@
 ########
 # Name: Brendha Tasca
 # Student ID: 991554242
-# Date: February 2nd, 2025
+# Date: February 2nd, 2026
 # Summary: Simple program to get day of the week given number
 # input by user.
 ########
@@ -21,6 +21,9 @@ def get_day_of_the_week():
         day = input("Please enter day of the week: ").lower().strip()
         if day in days_of_the_week:
             return day
+        elif len(day) == 0:
+            print("Name cannot be empty. Please enter a day of the week.")
+            continue
         print("Not a valid input. Please enter a day of the week.")
 
 def num_to_day(numb):
@@ -64,10 +67,14 @@ def get_user_action():
 
     OPTIONS = (1, 2)
     while True:
-        action = int(input("Please select an action: "))
-        if action in OPTIONS:
-            return action
-        print("Not a valid action. Please select one from the menu.")
+        action = input("Please select an action: ")
+        if len(action) != 0 and action.isdigit():
+            action_numb = int(action)
+            if action_numb in OPTIONS:
+                return action_numb
+        else:
+            print("Please choose a valid action from the menu.")
+        # print("Not a valid action. Please select one from the menu.")
 
 def main():
     action_num = get_user_action()

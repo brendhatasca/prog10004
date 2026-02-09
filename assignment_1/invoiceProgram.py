@@ -1,8 +1,9 @@
-"""
-Virtual Potion Shop - A retail invoice program.
-Author: Brendha Tasca Jakubiak
-Date: January 31st, 2025
-"""
+########
+# Name: Brendha Tasca Jakubiak
+# Student ID: 991554242
+# Date: February 5th, 2026
+# Summary: A retail invoice program.
+########
 
 def printGreetMsg():
     """
@@ -11,7 +12,7 @@ def printGreetMsg():
     Returns:
         None
     """
-    print("Hello, traveler! Welcome to the virtual Potion Shop!")
+    print("\nHello, traveler! Welcome to the virtual Potion Shop!\n")
 
 
 def getUserInfo():
@@ -21,13 +22,19 @@ def getUserInfo():
     Returns:
         tuple: (user_name, phone_number, postal_code)
     """
-    MESSAGE = "Please tell me your name, phone number, and postal code:"
-    print(MESSAGE)
-    user_name = input("Name: ")
-    phone_number = input("Phone number (XXX-XXX-XXXX): ")
-    postal_code = input("Postal code (A1B 2C3): ")
+    print("Please tell me your name, phone number, and postal code:\n")
+    
+    while True:
+        user_name = input("Name: ").strip()
+        phone_number = input("Phone number (XXX-XXX-XXXX): ").strip()
+        postal_code = input("Postal code (A1B 2C3): ").upper().strip()
 
-    return user_name, phone_number, postal_code
+        if user_name and phone_number and postal_code:
+            # Checks if user entered an empty field
+            return user_name, phone_number, postal_code
+        else:
+            print("\nPlease answer all fields.\n")
+    
 
 def getProducts():
     """
@@ -82,11 +89,30 @@ def collectOrder():
     products = getProducts()
 
     for product in products.values():
-        offer = f"We have {product['name']} for ${product['price']:.2f}"
-        print(offer)
-        quantity = int(input("How many would you like? "))
-        product['qty'] = quantity
+        while True:
+            offer = f"\nWe have {product['name']} for ${product['price']:.2f}"
+            print(offer)
 
+            quantity_str = input("How many would you like? ")
+
+            if not quantity_str:
+                # Check if user input is empty
+                print("\nQuantity cannot be empty.")
+                continue
+            elif not quantity_str.isdigit():
+                # Check if input is a digit
+                print("\nQuantity must be an integer greater than 0.")
+                continue
+            
+            quantity = int(quantity_str)
+
+            if quantity < 0:
+                print("\nQuantity must be greater than 0.")
+                continue
+            else:
+                product['qty'] = int(quantity_str)
+                break
+   
     return products
 
 def getUserDiscount():
@@ -97,10 +123,22 @@ def getUserDiscount():
         float: Discount percentage entered
     """
     while True:
-        discount = int(input("What is your discount? (0-100 percent) "))
+        discount_str = input("\nWhat is your discount? (0-100 percent) ")
+
+        if not discount_str:
+            print("\nDiscount cannot be empty.")
+            continue
+        elif not discount_str.isdigit():
+            print("\nDiscount must be a number between 0-100")
+            continue
+
+        discount = int(discount_str)
+
         if 0 <= discount <= 100:
             return discount
-        print("Please choose a number between 0 and 100.")
+        else:
+            print("Please enter a number between 0 and 100.")
+            continue
 
 def calcUserSubtotal(shopping_cart):
     """
@@ -175,11 +213,16 @@ def printUserReceipt(info, shopping_cart, bill, discount):
 
     print(f"| {'-' * 52} | {'-' * 11} |")
 
-    print(f"| {'Sub Total 1':>52} | {subtotal1:>11} |")
-    print(f"| {'H.S.T':>52} | {hst_amount:>11} |")
-    print(f"| {'Sub Total 2':>52} | {subtotal2:>11} |")
-    print(f"| {f'Discount ({discount})%':>52} | {discount_amount:>11} |")
-    print(f"| {'Amount Due':>52} | {amount_due:>11} |")
+    billing_items = [
+        ('Sub Total 1', f"{subtotal1:.2f}"),
+        ('H.S.T', f"{hst_amount:.2f}"),
+        ('Sub Total 2', f"{subtotal2:.2f}"),
+        (f'Discount ({discount}%)', f"{discount_amount:.2f}"),
+        ('Amount Due', f"{amount_due:.2f}")
+    ]
+
+    for label, amount in billing_items:
+        print(f"| {label:>52} | {amount:>11} |")
 
     print(f"| {'=' * (WIDTH - 4)} |")
 
